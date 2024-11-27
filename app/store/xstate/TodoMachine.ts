@@ -21,12 +21,12 @@ export const todoMachine = setup({
     events: {} as AddEvent | DeleteEvent
   },
   actions: {
-    addTodo: assign(({ context, event }) => ({
-      todos: [...context.todos, { id: context.todos.length + 1, todo: (event as AddEvent).value }]
-    })),
-    deleteTodo: assign(({ context, event }) => ({
-      todos: context.todos.filter((todo: ITodo) => todo.id !== (event as DeleteEvent).id)
-    }))
+    addTodo: assign({
+      todos: ({ context, event }) => [...context.todos, { id: context.todos.length + 1, todo: (event as AddEvent).value }]
+    }),
+    deleteTodo: assign({
+      todos: ({ context, event }) => context.todos.filter((todo: ITodo) => todo.id !== (event as DeleteEvent).id)
+    })
   }
 }).createMachine({
   id: 'todo',
