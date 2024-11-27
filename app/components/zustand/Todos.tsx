@@ -1,6 +1,6 @@
 import { ITodo } from "@/app/types";
-import Todo from "./Todo";
-import { useTodoStore } from "@/app/store/TodoStore";
+import Todo from "@/app/components/zustand/Todo";
+import { useTodoStore } from "@/app/store/zustand/TodoStore";
 
 export default function Todos() {
   const { todos } = useTodoStore();
