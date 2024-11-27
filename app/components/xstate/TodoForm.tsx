@@ -12,6 +12,8 @@ import {
   FormMessage,
 } from "@/app/components/ui/form"
 import { Input } from "@/app/components/ui/input"
+import { useMachine } from '@xstate/react';
+import { todoMachine } from '@/app/store/xstate/TodoMachine';
 
 const formSchema = z.object({
   todo: z.string().min(3, {
@@ -19,6 +21,7 @@ const formSchema = z.object({
   }),
 })
 export default function TodoForm() {
+  const [state, send] = useMachine(todoMachine);
   const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -28,8 +31,7 @@ export default function TodoForm() {
 
     function onSubmit(values: z.infer<typeof formSchema>) {
       form.setFocus("todo", { shouldSelect: true });
-      // addTodo(values.todo);
-      console.log(values);
+      send({type: "add", value: values.todo});
       form.reset();
     }
 

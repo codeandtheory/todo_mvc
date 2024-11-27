@@ -13,6 +13,14 @@ export const todoMachine = setup({
       type: 'delete';
       id: number;
     }
+  },
+  actions: {
+    addTodo: assign(({ context, event }) => ({
+      todos: [...context.todos, { id: context.todos.length + 1, todo: event.value }]
+    })),
+    deleteTodo: assign(({ context, event }) => ({
+      todos: context.todos.filter((todo: ITodo) => todo.id !== event.id)
+    }))
   }
 }).createMachine({
   id: 'todo',
@@ -28,17 +36,8 @@ export const todoMachine = setup({
   states: {
     form: {       // Refer: https://stately.ai/docs/states
       on: {
-        'add': {
-          actions: assign({
-            todo: '',
-            todos: ({ context, event }) => [...context.todos, { id: context.todos.length + 1, todo: event.value }]
-          })
-        },
-        'delete': {
-          actions: assign({
-            todos: ({ context, event }) => context.todos.filter((todo: ITodo) => todo.id !== event.id)
-          })
-        }
+        'add': { actions: 'addTodo'},
+        'delete': { actions: 'deleteTodo'}
       }
     },
   }
