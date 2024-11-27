@@ -1,25 +1,31 @@
 import { setup, assign } from 'xstate';
 import { ITodo } from '@/app/types';
+
+interface TodoContext {
+  todo: string;
+  todos: ITodo[];
+}
+
+type AddEvent = {
+  type: 'add';
+  value: string;
+}
+
+type DeleteEvent = {
+  type: 'delete';
+  id: number;
+}
 export const todoMachine = setup({
   types: {
-    context: {} as {
-      todo: string;
-      todos: ITodo[];
-    },
-    events: {} as {
-      type: 'add';
-      value: string;
-    } | {
-      type: 'delete';
-      id: number;
-    }
+    context: {} as TodoContext,
+    events: {} as AddEvent | DeleteEvent
   },
   actions: {
     addTodo: assign(({ context, event }) => ({
-      todos: [...context.todos, { id: context.todos.length + 1, todo: event.value }]
+      todos: [...context.todos, { id: context.todos.length + 1, todo: (event as AddEvent).value }]
     })),
     deleteTodo: assign(({ context, event }) => ({
-      todos: context.todos.filter((todo: ITodo) => todo.id !== event.id)
+      todos: context.todos.filter((todo: ITodo) => todo.id !== (event as DeleteEvent).id)
     }))
   }
 }).createMachine({
