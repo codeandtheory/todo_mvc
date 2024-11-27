@@ -22,9 +22,7 @@ const formSchema = z.object({
   }),
 })
 
-export default function TodoForm() {
-
-    // 1. Define your form.
+export default function TodoForm({ addTodo }: { addTodo: (todo: string) => void }) {
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -32,11 +30,10 @@ export default function TodoForm() {
       },
     })
 
-    // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-      // Do something with the form values.
-      // ✅ This will be type-safe and validated.
-      console.log(values)
+      form.setFocus("todo", { shouldSelect: true });
+      addTodo(values.todo);
+      form.reset();
     }
 
   return (
