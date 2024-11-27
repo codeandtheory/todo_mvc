@@ -1,4 +1,5 @@
 import { setup, assign } from 'xstate';
+import { createActorContext } from '@xstate/react';
 import { ITodo } from '@/app/types';
 
 interface TodoContext {
@@ -18,14 +19,14 @@ type DeleteEvent = {
 export const todoMachine = setup({
   types: {
     context: {} as TodoContext,
-    events: {} as AddEvent | DeleteEvent
+    events: {} as AddEvent | DeleteEvent | { type: 'form' }
   },
   actions: {
-    addTodo: assign({
-      todos: ({ context, event }) => [...context.todos, { id: context.todos.length + 1, todo: (event as AddEvent).value }]
+    addTodo: assign(({ context, event }) => {
+      return { todos: [...context.todos, { id: context.todos.length + 1, todo: (event as AddEvent).value }] };
     }),
-    deleteTodo: assign({
-      todos: ({ context, event }) => context.todos.filter((todo: ITodo) => todo.id !== (event as DeleteEvent).id)
+    deleteTodo: assign(({ context, event }) => {
+      return { todos: context.todos.filter((todo: ITodo) => todo.id !== (event as DeleteEvent).id) };
     })
   }
 }).createMachine({
@@ -48,3 +49,5 @@ export const todoMachine = setup({
     },
   }
 });
+
+export default createActorContext(todoMachine);
