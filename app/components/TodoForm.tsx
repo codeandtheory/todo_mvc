@@ -1,9 +1,7 @@
-"use client"
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
+import { useTodoStore } from "@/app/store/TodoStore";
 import { Button } from "@/app/components/ui/button"
 import {
   Form,
@@ -21,9 +19,9 @@ const formSchema = z.object({
     message: "Todo must be at least 3 characters.",
   }),
 })
-
-export default function TodoForm({ addTodo }: { addTodo: (todo: string) => void }) {
-    const form = useForm<z.infer<typeof formSchema>>({
+export default function TodoForm() {
+  const { addTodo } = useTodoStore();
+  const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
       defaultValues: {
         todo: "",

@@ -1,5 +1,8 @@
 import { ITodo } from "@/app/types";
 import Todo from "./Todo";
-export default function Todos({ todos }: { todos: ITodo[] }) {
-  return <div>{todos.map((todo) => <Todo key={todo.id} todo={todo} />)}</div>;
+import { useTodoStore } from "@/app/store/TodoStore";
+
+export default function Todos() {
+  const { todos } = useTodoStore();
+  return <div>{todos.map((todo: ITodo) => <Todo key={todo.id} todo={todo} />)}</div>;
 }
